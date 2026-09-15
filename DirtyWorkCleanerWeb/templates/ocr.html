@@ -1,0 +1,185 @@
+% rebase('base')
+
+<h1>OCR处理 / 凭证结构化</h1>
+
+<div class="module-layout">
+
+    <!-- 左侧操作区 -->
+    <div class="left-panel">
+        <div class="status-box section-box">
+            <h3>操作区</h3>
+
+            <form action="/run_ocr" method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+                <div class="form-block">
+                    <p>上传凭证图片或文本</p>
+                    <input type="file" name="ocr_file" accept=".txt,.png,.jpg,.jpeg,.webp,.bmp">
+                </div>
+
+                <div class="form-block">
+                    <p>批量上传（可选）</p>
+                    <input type="file" name="ocr_files" multiple accept=".txt,.png,.jpg,.jpeg,.webp,.bmp">
+                </div>
+
+                <div style="margin-top:18px;">
+                    <button type="submit">开始识别</button>
+                </div>
+            </form>
+
+            <hr style="margin:18px 0;">
+
+            <h3 style="margin-bottom:12px;">状态区</h3>
+
+            <div class="metric-list">
+                <div class="mini-metric">
+                    <span>已上传</span>
+                    <b>{{upload_count if defined('upload_count') else 0}}</b>
+                </div>
+                <div class="mini-metric">
+                    <span>成功识别</span>
+                    <b>{{success_count if defined('success_count') else 0}}</b>
+                </div>
+                <div class="mini-metric">
+                    <span>待人工修正</span>
+                    <b>{{warning_count if defined('warning_count') else 0}}</b>
+                </div>
+            </div>
+
+            <div id="loading" class="muted" style="display:none; margin-top:16px;">
+                处理中，请稍后...
+            </div>
+
+            % if defined('error'):
+                <div style="margin-top:16px; color:#d4380d;">{{error}}</div>
+            % end
+        </div>
+    </div>
+
+    <!-- 右侧结果区 -->
+    <div class="right-panel">
+
+        <div class="top-row">
+            <div class="status-box">
+                <h3>OCR原始文本</h3>
+                % if defined('ocr_raw_text'):
+                    <pre>{{ocr_raw_text}}</pre>
+                % else:
+                    <div class="muted">运行后显示OCR原始文本</div>
+                % end
+            </div>
+
+            <div class="status-box">
+                <h3>字段提取摘要</h3>
+                % if defined('field_html'):
+                    {{!field_html}}
+                % else:
+                    <div class="muted">运行后显示提取字段</div>
+                % end
+            </div>
+        </div>
+
+        <div class="status-box">
+            <h3>标准化凭证</h3>
+            % if defined('standard_text'):
+                <pre>{{standard_text}}</pre>
+            % else:
+                <div class="muted">运行后显示标准化凭证文本</div>
+            % end
+        </div>
+
+        <div class="bottom-row">
+            <div class="status-box">
+                <h3>识别异常提示</h3>
+                % if defined('warning_html'):
+                    {{!warning_html}}
+                % else:
+                    <div class="muted">暂无提示</div>
+                % end
+            </div>
+
+            <div class="status-box">
+                <h3>下游操作</h3>
+                <div class="downstream-actions">
+                    <button type="button" disabled>导出Excel</button>
+                    <button type="button" disabled>送入凭证核查</button>
+                </div>
+                <div class="muted" style="margin-top:12px;">
+                    当前先展示结构化结果，后续可接导出和模块跳转。
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.module-layout {
+    display: grid;
+    grid-template-columns: 3.5fr 6.5fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.right-panel {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 24px;
+    min-width: 0;
+}
+
+.top-row,
+.bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.section-box {
+    min-height: calc(100vh - 140px);
+}
+
+.metric-list {
+    display: grid;
+    gap: 10px;
+}
+
+.mini-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fbff;
+    border: 1px solid #dbeafe;
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.downstream-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-block {
+    margin-bottom: 12px;
+}
+
+.form-block p {
+    margin: 0 0 6px 0;
+}
+
+@media (max-width: 1200px) {
+    .module-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .top-row,
+    .bottom-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>

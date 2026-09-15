@@ -1,0 +1,25 @@
+% rebase('base')
+
+<h1>DWCAIcenter</h1>
+
+<div class="status-box" style="max-width:900px; min-height:420px;">
+    <h3>AI助手</h3>
+    <p class="muted">您好，我是您的AI助手，请问您有什么需求？</p>
+
+    <form action="/run_ai" method="post">
+        <div style="margin:18px 0;">
+            <textarea name="question" style="width:100%; min-height:120px; padding:12px; border:1px solid #d9d9d9; border-radius:10px; resize:vertical;" placeholder="请输入问题"></textarea>
+        </div>
+
+        <button type="submit">发送</button>
+    </form>
+
+    <div style="margin-top:28px;">
+        <h3>回答</h3>
+        % if defined('answer'):
+            <pre style="margin:0; background:#f7f9fb; padding:16px; border-radius:10px; white-space:pre-wrap;">{{answer}}</pre>
+        % else:
+            <div class="muted">暂无内容</div>
+        % end
+    </div>
+</div>

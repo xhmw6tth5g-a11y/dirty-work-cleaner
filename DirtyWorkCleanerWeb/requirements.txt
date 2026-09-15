@@ -1,0 +1,28 @@
+# DirtyWorkCleanerWeb 依赖清单
+# 说明：以下版本组合已在本机实测跑通（Python 3.13.14 / Windows）。
+#       用 `pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple` 安装。
+
+# ---- Web 框架与配置 ----
+bottle>=0.13.4
+python-dotenv>=1.0
+
+# ---- 数据处理 ----
+pandas>=2.2
+numpy>=1.26
+openpyxl>=3.1          # 读写 xlsx（pandas 的 Excel 引擎）
+
+# ---- 外部服务 ----
+openai>=1.40           # 调用 DeepSeek（走 OpenAI 兼容接口）
+requests>=2.32         # 调用高德地图地理编码 API
+
+# ================================================================
+# 以下为可选依赖，主链路不需要，装了体积较大，按需取消注释
+# ================================================================
+# OCR 识别（app.py 用 try/except 包住，未安装时图片上传会提示，页面仍可访问）
+# 注意：首次调用会自动下载模型，约 数百 MB
+# paddleocr>=3.0
+# paddlepaddle>=3.0
+# Pillow>=10.0
+
+# 仅 Streamlit 版入口 dirty_work_cleaner_mvp_v4_promptfixed.py 需要
+# streamlit>=1.40

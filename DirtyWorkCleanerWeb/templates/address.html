@@ -1,0 +1,62 @@
+% rebase('base')
+
+<h1>地址核查</h1>
+
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+
+    <div class="status-box" style="width:360px; min-height:280px;">
+        <h3>上传材料</h3>
+
+        <form action="/run_address" method="post" enctype="multipart/form-data">
+            <div style="margin-bottom:18px;">
+                <p style="margin:0 0 8px 0;">上传地址数据</p>
+                <input type="file" name="address_file">
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label>
+                    <input type="checkbox" name="ai_enabled" checked>
+                    AI介入
+                </label>
+            </div>
+
+            <div style="margin-top:20px;">
+                <button type="submit">开始核查</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:420px; min-height:280px;">
+        <h3>AI解释</h3>
+        % if defined('ai_text'):
+            <pre style="margin:0; background:#f7f9fb; padding:16px; border-radius:10px;">{{ai_text}}</pre>
+        % else:
+            <div class="muted">运行后显示AI解释结果</div>
+        % end
+    </div>
+
+</div>
+
+<div style="margin-top:34px;">
+    <h3>结果区</h3>
+</div>
+
+<div style="display:flex; gap:24px; flex-wrap:wrap;">
+    <div class="status-box" style="flex:1; min-width:520px;">
+        <h3>汇总</h3>
+        % if defined('summary_html'):
+            <div style="overflow-x:auto;">{{!summary_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:520px;">
+        <h3>明细</h3>
+        % if defined('detail_html'):
+            <div style="overflow-x:auto;">{{!detail_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+</div>

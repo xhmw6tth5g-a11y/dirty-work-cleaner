@@ -1,0 +1,45 @@
+# ===== 密钥 / 环境变量（切勿提交） =====
+API key.txt
+*.key.txt
+.env
+.env.local
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== 虚拟环境 =====
+venv/
+.venv/
+env/
+ENV/
+
+# ===== 运行时产物 / 临时文件 =====
+dwc_upload_*/
+*.log
+*.tmp
+~$*.xlsx
+~$*.docx
+~$*.pptx
+
+# ===== 生成的核查结果（每次运行都会重建，不入库） =====
+一致性检查结果*.xlsx
+函证地址核查结果*.xlsx
+货币supporting底稿*.xlsx
+supporting_output/
+
+# ===== 比赛材料与原始凭证数据（含真实业务信息，不入库） =====
+# 商业计划书、答辩 PPT、Demo 说明，以及带真实企业信息的凭证影像与清单。
+KP DWC/
+KP模拟文件/
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

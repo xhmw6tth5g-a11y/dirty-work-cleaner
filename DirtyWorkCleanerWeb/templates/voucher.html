@@ -1,0 +1,199 @@
+% rebase('base')
+
+<h1>凭证核查</h1>
+
+<div class="voucher-layout">
+
+    <!-- 左侧 -->
+    <div class="left-panel">
+
+        <!-- 凭证上传 -->
+        <div class="status-box section-box">
+            <h3>凭证上传</h3>
+
+            <form action="/run_voucher" method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+
+                <div class="form-block">
+                    <p>上传凭证</p>
+                    <input type="file" name="voucher">
+                </div>
+
+                <div class="form-block">
+                    <p>凭证号</p>
+                    <input type="text" name="voucher_no" class="text-input">
+                </div>
+
+                <div class="form-block">
+                    <p>凭证金额</p>
+                    <input type="text" name="voucher_amount" class="text-input">
+                </div>
+
+                <div class="form-block">
+                    <p>费用类型</p>
+                    <input type="text" name="expense_type" class="text-input">
+                </div>
+
+                <hr>
+
+        </div>
+
+        <!-- 附件 -->
+        <div class="status-box section-box">
+
+                <h3>附件处理</h3>
+
+                <div class="form-block">
+                    <p>附件模式</p>
+                    <select name="attachment_mode" class="text-input">
+                        <option value="none">无附件</option>
+                        <option value="ocr">少量附件</option>
+                        <option value="representative">代表性录入</option>
+                    </select>
+                </div>
+
+                <div class="form-block">
+                    <p>附件数量</p>
+                    <input type="number" name="attachment_count" class="text-input">
+                </div>
+
+                <div class="form-block">
+                    <p>估计金额</p>
+                    <input type="text" name="estimated_attachment_amount" class="text-input">
+                </div>
+
+                <div class="form-block">
+                    <p>备注</p>
+                    <textarea name="notes" class="text-area"></textarea>
+                </div>
+
+                <div style="margin-top:16px;">
+                    <button type="submit">运行核查</button>
+                </div>
+
+            </form>
+
+            <div id="loading" class="muted" style="display:none;">处理中...</div>
+
+        </div>
+
+    </div>
+
+    <!-- 右侧 -->
+    <div class="right-panel">
+
+        <!-- AI区 -->
+        <div class="status-box top-right-box highlight-box">
+            <h3>AI复核意见</h3>
+
+            % if defined('ai'):
+                <pre class="ai-box">{{ai}}</pre>
+            % else:
+                <div class="ai-placeholder">
+                    等待数据处理后生成AI判断结果
+                </div>
+            % end
+        </div>
+
+        <!-- 下方 -->
+        <div class="bottom-right-grid">
+
+            <div class="status-box">
+                <h3>核查结果</h3>
+                % if defined('result'):
+                    {{!result}}
+                % else:
+                    <div class="muted">暂无结果</div>
+                % end
+            </div>
+
+            <div class="status-box">
+                <h3>汇总</h3>
+                % if defined('summary'):
+                    {{!summary}}
+                % else:
+                    <div class="muted">暂无结果</div>
+                % end
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.voucher-layout {
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    gap: 24px;
+}
+
+/* 左侧 */
+.left-panel {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+    height: 85vh;
+}
+
+/* 左侧滚动 */
+.section-box {
+    overflow-y: auto;
+}
+
+/* 右侧 */
+.right-panel {
+    display: grid;
+    grid-template-rows: 260px auto;
+    gap: 24px;
+}
+
+/* AI重点强化 */
+.highlight-box {
+    border: 2px solid #1677ff;
+}
+
+.ai-box {
+    background: #f6faff;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.ai-placeholder {
+    color: #999;
+    padding: 20px;
+}
+
+/* 下方 */
+.bottom-right-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* 输入框 */
+.text-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.text-area {
+    width: 100%;
+    min-height: 80px;
+}
+
+/* 移动端 */
+@media (max-width: 1200px) {
+    .voucher-layout {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>

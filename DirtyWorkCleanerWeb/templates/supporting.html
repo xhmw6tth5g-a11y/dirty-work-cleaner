@@ -1,0 +1,67 @@
+% rebase('base')
+
+<h1>Supporting整理</h1>
+
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+
+    <div class="status-box" style="width:360px; min-height:280px;">
+        <h3>上传材料</h3>
+
+        <form action="/run_supporting" method="post" enctype="multipart/form-data">
+            <div style="margin-bottom:18px;">
+                <p style="margin:0 0 8px 0;">上传Supporting</p>
+                <input type="file" name="supporting_files" multiple>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label>
+                    <input type="checkbox" name="ai_enabled" checked>
+                    AI辅助
+                </label>
+            </div>
+
+            <div style="margin-top:20px;">
+                <button type="submit">开始整理</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:420px; min-height:280px;">
+        <h3>处理说明</h3>
+        <div class="muted">运行后显示Supporting整理说明</div>
+    </div>
+
+</div>
+
+<div style="margin-top:34px;">
+    <h3>结果区</h3>
+</div>
+
+<div style="display:flex; gap:24px; flex-wrap:wrap;">
+    <div class="status-box" style="flex:1; min-width:350px;">
+        <h3>分类结果</h3>
+        % if defined('classify_html'):
+            <div style="overflow-x:auto;">{{!classify_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:350px;">
+        <h3>底稿</h3>
+        % if defined('draft_html'):
+            <div style="overflow-x:auto;">{{!draft_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:350px;">
+        <h3>缺失清单</h3>
+        % if defined('missing_html'):
+            <div style="overflow-x:auto;">{{!missing_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+</div>

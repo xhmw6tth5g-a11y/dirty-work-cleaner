@@ -1,0 +1,242 @@
+% rebase('base')
+
+<h1>一致性检查</h1>
+
+<div class="module-layout">
+
+    <!-- 左侧操作区 -->
+    <div class="left-panel">
+        <div class="status-box section-box">
+            <h3>操作区</h3>
+
+            <form action="/run_consistency" method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+                <div class="form-block">
+                    <p>上传抽凭清单</p>
+                    <input type="file" name="sampling_file" accept=".xlsx,.xls,.csv">
+                </div>
+
+                <div class="form-block">
+                    <p>上传实际凭证表</p>
+                    <input type="file" name="voucher_file" accept=".xlsx,.xls,.csv">
+                </div>
+
+                <hr style="margin:18px 0;">
+
+                <div class="form-block">
+                    <p>金额容忍度</p>
+                    <input type="text" name="amount_tolerance" class="text-input" value="0.01">
+                </div>
+
+                <div class="check-block">
+                    <label><input type="checkbox" name="enable_ai" checked> 启用AI复核</label>
+                </div>
+
+                <div style="margin-top:18px;">
+                    <button type="submit">运行检查</button>
+                </div>
+            </form>
+
+            <div id="loading" class="muted" style="display:none; margin-top:16px;">
+                处理中，请稍后...
+            </div>
+
+            % if defined('error'):
+                <div style="margin-top:16px; color:#d4380d;">{{error}}</div>
+            % end
+        </div>
+    </div>
+
+    <!-- 右侧结果区 -->
+    <div class="right-panel">
+
+        <!-- 右上：汇总 -->
+        <div class="status-box summary-box">
+            <h3>汇总区</h3>
+
+            % if defined('metric_cards'):
+                <div class="metric-grid">
+                    {{!metric_cards}}
+                </div>
+            % else:
+                <div class="muted">运行后显示汇总指标</div>
+            % end
+
+            % if defined('summary_html'):
+                <div class="table-wrap" style="margin-top:18px;">
+                    {{!summary_html}}
+                </div>
+            % end
+        </div>
+
+        <!-- 右中：明细 -->
+        <div class="status-box detail-box">
+            <div class="detail-header">
+                <h3>明细表</h3>
+                <div class="filter-row">
+                    <span class="filter-chip active">全部</span>
+                    <span class="filter-chip">凭证缺失</span>
+                    <span class="filter-chip">金额不一致</span>
+                    <span class="filter-chip">日期不一致</span>
+                    <span class="filter-chip">需人工复核</span>
+                    <span class="filter-chip">一致</span>
+                </div>
+            </div>
+
+            % if defined('detail_html'):
+                <div class="table-wrap table-tall">
+                    {{!detail_html}}
+                </div>
+            % else:
+                <div class="muted">暂无结果</div>
+            % end
+        </div>
+
+        <!-- 右下：AI -->
+        <div class="status-box ai-box">
+            <h3>AI总结</h3>
+
+            % if defined('ai_text'):
+                <pre>{{ai_text}}</pre>
+            % else:
+                <div class="muted">运行后显示异常样本总结与建议</div>
+            % end
+        </div>
+
+    </div>
+</div>
+
+<style>
+.module-layout {
+    display: grid;
+    grid-template-columns: 3.5fr 6.5fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.left-panel {
+    min-width: 0;
+}
+
+.right-panel {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: auto minmax(320px, 1fr) 220px;
+    gap: 24px;
+}
+
+.section-box {
+    min-height: calc(100vh - 140px);
+}
+
+.summary-box {
+    min-height: 240px;
+}
+
+.detail-box {
+    min-height: 360px;
+}
+
+.ai-box {
+    min-height: 220px;
+}
+
+.form-block {
+    margin-bottom: 12px;
+}
+
+.form-block p {
+    margin: 0 0 6px 0;
+}
+
+.text-input {
+    width: 100%;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.metric-card {
+    background: #f8fbff;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 14px;
+    min-height: 84px;
+}
+
+.metric-title {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+}
+
+.table-wrap {
+    overflow: auto;
+}
+
+.table-tall {
+    max-height: 420px;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.filter-chip.active {
+    background: #eaf3ff;
+    color: #1677ff;
+    border-color: #bfdbfe;
+}
+
+@media (max-width: 1200px) {
+    .module-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .right-panel {
+        grid-template-rows: auto auto auto;
+    }
+
+    .metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .detail-header {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>

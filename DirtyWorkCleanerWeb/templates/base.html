@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dirty Work Cleaner</title>
+
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f3f5f7;
+            color: #111827;
+        }
+        body { min-height: 100vh; }
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1f2a36 0%, #1a2330 100%);
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px 16px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.04);
+        }
+        .sidebar h2 {
+            margin: 0 0 22px 0;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.1;
+            word-break: break-word;
+            letter-spacing: -0.5px;
+        }
+        .sidebar a {
+            display: block;
+            color: rgba(255,255,255,0.92);
+            text-decoration: none;
+            margin: 6px 0;
+            padding: 10px 12px;
+            font-size: 14px;
+            border-radius: 10px;
+            transition: 0.18s ease;
+        }
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
+        }
+        .main {
+            margin-left: 220px;
+            padding: 24px 28px 32px 28px;
+            min-height: 100vh;
+            background: #f3f5f7;
+        }
+        h1 {
+            margin: 0 0 14px 0;
+            font-size: 34px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.6px;
+        }
+        h3 {
+            margin: 0 0 14px 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+        p { margin: 0; line-height: 1.6; }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 26px;
+        }
+        .card-container {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .card {
+            width: 180px;
+            height: 90px;
+            background: #ffffff;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.18s ease;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+            text-align: center;
+            border: 1px solid #e8edf3;
+        }
+        .card.big {
+            width: 220px;
+            height: 120px;
+            font-size: 16px;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            background: #f7fbff;
+            border-color: #bfdbfe;
+        }
+        .status-grid {
+            margin-top: 56px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .status-box {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+            border: 1px solid #e8edf3;
+        }
+        button, .action-btn {
+            background: #1677ff;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.18s ease;
+        }
+        button:hover, .action-btn:hover { background: #4096ff; }
+        input[type="file"] { width: 100%; font-size: 13px; }
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #d7dce2;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #111827;
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+            border-color: #91caff;
+            box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.10);
+        }
+        textarea { resize: vertical; min-height: 88px; }
+        hr { border: none; border-top: 1px solid #e5e7eb; }
+        .muted { color: #8c8c8c; }
+        .ok { color: #2f9e44; font-weight: 600; }
+        .link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 12px 0;
+        }
+        .link-row span { flex: 1; }
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: "Consolas", "Menlo", "Monaco", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { background: #f8fafc; font-weight: 700; }
+        @media (max-width: 1200px) {
+            .sidebar { width: 190px; }
+            .main { margin-left: 190px; padding: 20px; }
+        }
+        @media (max-width: 900px) {
+            .sidebar { position: static; width: 100%; height: auto; border-right: none; }
+            .main { margin-left: 0; padding: 16px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="sidebar">
+    <h2>DirtyWorkCleaner</h2>
+    <a href="/">首页</a>
+    <a href="/voucher">凭证核查</a>
+    <a href="/consistency">一致性检查</a>
+    <a href="/ocr">OCR处理</a>
+    <a href="/address">地址核查</a>
+    <a href="/company">企业信息填列</a>
+    <a href="/supporting">Supporting整理</a>
+    <a href="/ai">DWCAIcenter</a>
+</div>
+
+<div class="main">
+    {{!base}}
+</div>
+</body>
+</html>

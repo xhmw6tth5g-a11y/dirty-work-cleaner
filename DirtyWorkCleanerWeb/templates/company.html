@@ -1,0 +1,51 @@
+% rebase('base')
+
+<h1>企业信息填列</h1>
+
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+
+    <div class="status-box" style="width:360px; min-height:280px;">
+        <h3>上传材料</h3>
+
+        <form action="/run_company" method="post" enctype="multipart/form-data">
+            <div style="margin-bottom:18px;">
+                <p style="margin:0 0 8px 0;">上传企业信息</p>
+                <input type="file" name="company_file" multiple>
+            </div>
+
+            <div style="margin-top:20px;">
+                <button type="submit">生成底稿</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:420px; min-height:280px;">
+        <h3>说明</h3>
+        <div class="muted">运行后显示企业信息提取结果</div>
+    </div>
+
+</div>
+
+<div style="margin-top:34px;">
+    <h3>结果区</h3>
+</div>
+
+<div style="display:flex; gap:24px; flex-wrap:wrap;">
+    <div class="status-box" style="flex:1; min-width:520px;">
+        <h3>汇总</h3>
+        % if defined('summary_html'):
+            <div style="overflow-x:auto;">{{!summary_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+
+    <div class="status-box" style="flex:1; min-width:520px;">
+        <h3>底稿表</h3>
+        % if defined('result_html'):
+            <div style="overflow-x:auto;">{{!result_html}}</div>
+        % else:
+            <div class="muted">暂无结果</div>
+        % end
+    </div>
+</div>

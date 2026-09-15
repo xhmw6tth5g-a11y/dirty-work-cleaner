@@ -1,0 +1,83 @@
+% rebase('base')
+
+<div class="top-bar">
+    <h1>控制台</h1>
+</div>
+
+<h3>功能入口</h3>
+
+<div class="card-container">
+    <div class="card big" onclick="enterModule('/voucher', '进入凭证核查')"><div><b>凭证核查</b><br><small>纸质附件逻辑</small></div></div>
+    <div class="card big" onclick="enterModule('/consistency', '进入一致性检查')"><div><b>一致性检查</b><br><small>抽凭与实际凭证</small></div></div>
+    <div class="card big" onclick="enterModule('/ocr', '进入OCR处理')"><div><b>OCR处理</b><br><small>凭证结构化</small></div></div>
+    <div class="card big" onclick="enterModule('/address', '进入地址核查')"><div><b>地址核查</b><br><small>函证匹配</small></div></div>
+    <div class="card big" onclick="enterModule('/company', '进入企业信息')"><div><b>企业信息</b><br><small>信息填列</small></div></div>
+    <div class="card big" onclick="enterModule('/supporting', '进入Supporting')"><div><b>Supporting</b><br><small>附件整理</small></div></div>
+</div>
+
+<div class="status-grid">
+    <div class="status-box" style="min-width:320px;">
+        <h3>当前状态</h3>
+        <div class="link-row"><span>凭证核查：<span class="ok">可用</span></span><button onclick="enterModule('/voucher', '进入凭证核查')">进入</button></div>
+        <div class="link-row"><span>一致性检查：<span class="ok">可用</span></span><button onclick="enterModule('/consistency', '进入一致性检查')">进入</button></div>
+        <div class="link-row"><span>OCR处理：<span class="ok">可用</span></span><button onclick="enterModule('/ocr', '进入OCR处理')">进入</button></div>
+        <div class="link-row"><span>地址核查：<span class="ok">已接入</span></span><button onclick="enterModule('/address', '进入地址核查')">进入</button></div>
+        <div class="link-row"><span>企业信息：<span class="ok">已接入</span></span><button onclick="enterModule('/company', '进入企业信息')">进入</button></div>
+        <div class="link-row"><span>Supporting：<span class="ok">已接入</span></span><button onclick="enterModule('/supporting', '进入Supporting')">进入</button></div>
+    </div>
+
+    <div class="status-box" style="min-width:320px;">
+        <h3>最近操作</h3>
+        <div id="recentOps" class="muted">暂无记录</div>
+        <div style="margin-top: 16px;"><button onclick="clearRecentOps()">清空记录</button></div>
+    </div>
+
+    <div class="status-box" style="min-width:320px;">
+        <h3>风险提示</h3>
+        <div id="riskBox" class="muted">正在分析中...</div>
+        <div style="margin-top: 16px;"><button onclick="refreshRisk()">刷新</button></div>
+    </div>
+
+    <div class="status-box" style="min-width:320px;">
+        <h3>AI助手</h3>
+        <p class="muted">用于解释结果和建议下一步</p>
+        <div style="margin-top: 18px;"><button onclick="enterModule('/ai', '打开DWCAIcenter')">打开 DWCAIcenter</button></div>
+    </div>
+</div>
+
+<script>
+const RECENT_KEY = 'dwc_recent_ops';
+function getRecentOps() { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+function saveRecentOps(ops) { localStorage.setItem(RECENT_KEY, JSON.stringify(ops)); }
+function pushRecentOp(text) {
+    const ops = getRecentOps();
+    ops.unshift(text);
+    if (ops.length > 8) ops.pop();
+    saveRecentOps(ops);
+    renderRecentOps();
+}
+function renderRecentOps() {
+    const ops = getRecentOps();
+    const box = document.getElementById('recentOps');
+    if (ops.length === 0) {
+        box.innerHTML = '<span class="muted">暂无记录</span>';
+        return;
+    }
+    box.innerHTML = ops.map(item => `<div style="margin-bottom:8px;">• ${item}</div>`).join('');
+}
+function clearRecentOps() { saveRecentOps([]); renderRecentOps(); }
+function enterModule(url, actionText) { pushRecentOp(actionText); location.href = url; }
+function refreshRisk() {
+    const risks = [
+        "凭证核查需人工复核样本待检查",
+        "一致性检查异常样本需优先核对",
+        "地址核查可能存在不一致样本",
+        "Supporting 缺失项待补充"
+    ];
+    let output = "";
+    risks.forEach((r, i) => { output += (i + 1) + ". " + r + "<br>"; });
+    document.getElementById("riskBox").innerHTML = output;
+}
+renderRecentOps();
+refreshRisk();
+</script>
